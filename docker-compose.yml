@@ -1,0 +1,30 @@
+version: '3'
+services:
+
+  mariadb:
+    container_name: doli11-db
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: dolibarr
+    ports:
+      - "33062:3306"  
+      
+  web:
+    container_name: doli11-web
+    image: tuxgasy/dolibarr:11.0.3-php7.1 
+    environment:
+      DOLI_DB_HOST: mariadb
+      DOLI_DB_USER: root
+      DOLI_DB_PASSWORD: root
+      DOLI_DB_NAME: dolibarr
+      DOLI_URL_ROOT: 'http://0.0.0.0'
+      PHP_INI_DATE_TIMEZONE: 'Europe/Paris'
+    volumes:
+      - .:/docker
+    command: /docker/start.sh
+    ports:
+      - "8002:80"
+      - "2202:22"
+    links:
+      - mariadb
